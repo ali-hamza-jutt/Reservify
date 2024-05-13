@@ -1,18 +1,18 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, Image, Linking,TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import MenuButton from '../../components/ProfileMenuButton'; // Adjust the import path as necessary
 import { useNavigation } from '@react-navigation/native';
 
-
 export default function Profile() {
+    const navigation = useNavigation();
   
     const menuOptions = [
-        { title: 'Personnel Information', onPress: () => console.log('Personnel Information') },
+        { title: 'Personnel Information', onPress: () => navigation.navigate('PersonnelInformation') },
         { title: 'Notifications', onPress: () => console.log('Notifications') },
         { title: 'Payments and Payouts', onPress: () => console.log('Payments and Payouts') },
         { title: 'Privacy Policy', onPress: () => console.log('Privacy Policy') }
     ];
-    const navigation = useNavigation();
+
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={styles.profileHeader}>
@@ -45,7 +45,7 @@ export default function Profile() {
 
             <View style={styles.menuOptions}>
                 {menuOptions.map((option, index) => (
-                    <MenuButton key={index} title={option.title} onPress={navigation.navigate('Personnel_Information')} />
+                    <MenuButton key={index} title={option.title} onPress={option.onPress} />
                 ))}
             </View>
         </ScrollView>
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flexGrow: 1,
-    justifyContent: 'center'
+    justifyContent: 'center',
   },
   profileHeader: {
     justifyContent: 'center',
@@ -146,7 +146,6 @@ const styles = StyleSheet.create({
   menuOptions: {
     marginTop: 30,
     paddingHorizontal: 20,
-    marginBottom: 50,  // Added a bottom margin of 50
+    marginBottom: 50,
   }
 });
-
