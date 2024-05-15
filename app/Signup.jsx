@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView,ScrollView} from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import CustomTextField from '../components/CustomTextField';
@@ -43,75 +43,75 @@ export default function Signup() {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <SafeAreaView style={{ flex: 1 }}>
-              <ScrollView contentContainerStyle={styles.scrollViewContent}>
-                <View style={styles.header}>
-                    <Image
-                        style={styles.tinyLogo}
-                        source={require('../assets/sign up.png')}
-                    />
-                </View>
-
-                <View style={styles.middleSection}>
-                    <Text style={styles.text}>Register</Text>
-                    <Text style={{ fontSize: 17 }}>Please Register to continue.</Text>
-                    <View style={styles.inputSection}>
-                        <CustomTextField
-                            placeholder={'Username'}
-                            name={'Username'}
-                            value={userData.Username}
-                            onChangeText={(text) => handleChange("Username", text)}
-                            keyboardType="default"
-                            icon={"person-circle-outline"}
-                        />
-                        <CustomTextField
-                            placeholder={'Phone number'}
-                            name={'phone'}
-                            value={userData.phone}
-                            onChangeText={(text) => handleChange("cnfPassword", text)}
-                            keyboardType="default"
-                            icon={"call"}
-                        />
-                        <CustomTextField
-                            placeholder={'Email'}
-                            name={'email'}
-                            value={userData.email}
-                            onChangeText={(text) => handleChange("email", text)}
-                            keyboardType="default"
-                            icon={"mail-outline"}
-                        />
-                        <CustomTextField
-                            placeholder={'Password'}
-                            name={'password'}
-                            value={userData.password}
-                            onChangeText={(text) => handleChange("password", text)}
-                            keyboardType="default"
-                            icon={"lock-closed"}
-                        />
-                        <CustomTextField
-                            placeholder={'Confirm Password'}
-                            name={'cnfPassword'}
-                            value={userData.cnfPassword}
-                            onChangeText={(text) => handleChange("cnfPassword", text)}
-                            keyboardType="default"
-                            icon={"lock-closed"}
+                <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                    <View style={styles.header}>
+                        <Image
+                            style={styles.tinyLogo}
+                            source={require('../assets/sign up.png')}
                         />
                     </View>
 
-                <View style={styles.bottomSection}>
-                    <CustomButton
-                        title={'Sign up'}
-                        color={'#102C57'}
-                        textColor={'#FEFAF6'}
-                        onPress={handleSubmit}
-                    />
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 17, fontWeight: '200', }}>Already have an account? </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                            <Text style={{ fontSize: 17, textDecorationLine: 'underline' }}>Login</Text>
-                        </TouchableOpacity>
+                    <View style={styles.middleSection}>
+                        <Text style={styles.text}>Register</Text>
+                        <Text style={{ fontSize: 17 }}>Please Register to continue.</Text>
+                        <View style={styles.inputSection}>
+                            <CustomTextField
+                                placeholder={'Username'}
+                                name={'Username'}
+                                value={userData.Username}
+                                onChangeText={(text) => handleChange("Username", text)}
+                                keyboardType="default"
+                                icon={"person-circle-outline"}
+                            />
+                            <CustomTextField
+                                placeholder={'Phone number'}
+                                name={'phone'}
+                                value={userData.phone}
+                                onChangeText={(text) => handleChange("cnfPassword", text)}
+                                keyboardType="default"
+                                icon={"call"}
+                            />
+                            <CustomTextField
+                                placeholder={'Email'}
+                                name={'email'}
+                                value={userData.email}
+                                onChangeText={(text) => handleChange("email", text)}
+                                keyboardType="default"
+                                icon={"mail-outline"}
+                            />
+                            <CustomTextField
+                                placeholder={'Password'}
+                                name={'password'}
+                                value={userData.password}
+                                onChangeText={(text) => handleChange("password", text)}
+                                keyboardType="default"
+                                icon={"lock-closed"}
+                            />
+                            <CustomTextField
+                                placeholder={'Confirm Password'}
+                                name={'cnfPassword'}
+                                value={userData.cnfPassword}
+                                onChangeText={(text) => handleChange("cnfPassword", text)}
+                                keyboardType="default"
+                                icon={"lock-closed"}
+                            />
+                        </View>
                     </View>
-                </View>
-               </ScrollView>
+                    <View style={styles.bottomSection}>
+                        <CustomButton
+                            title={'Sign up'}
+                            color={'#102C57'}
+                            textColor={'#FEFAF6'}
+                            onPress={handleSubmit}
+                        />
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, fontWeight: '200', }}>Already have an account? </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+                                <Text style={{ fontSize: 17, textDecorationLine: 'underline' }}>Login</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </ScrollView>
             </SafeAreaView>
         </KeyboardAvoidingView>
     );
@@ -119,7 +119,7 @@ export default function Signup() {
 
 const styles = StyleSheet.create({
     container: {
-        flex:1,
+        flex: 1,
         backgroundColor: '#FEFAF6',
     },
     header: {
