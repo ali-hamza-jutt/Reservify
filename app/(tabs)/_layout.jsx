@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { MaterialIcons } from '@expo/vector-icons';
+import { Ionicons,MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 const screenOptions = {
@@ -46,7 +45,7 @@ export default function TabLayout() {
         options={{
           tabBarIcon: ({ focused }) => (
             <View>
-              <Ionicons name="search" size={focused ? 34 : 24} color='#FEFAF6' />
+              <MaterialCommunityIcons name="airplane-marker" size={focused ? 34 : 24} color='#FEFAF6' />
               {focused ? <Text style={{color: '#FEFAF6', fontSize: 11}}>Trips</Text> : null}
             </View>
           )

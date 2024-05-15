@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView,ScrollView} from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import CustomTextField from '../components/CustomTextField';
@@ -10,6 +10,7 @@ export default function Signup() {
     const [submit, setSubmit] = useState(false);
     const [userData, setUserData] = useState({
         Username: "",
+        phone: "",
         email: "",
         password: "",
         cnfPassword: ""
@@ -28,10 +29,10 @@ export default function Signup() {
     }
 
     function handleSubmit() {
-        if (userData.Username.trim() === "" || userData.email.trim() === "" || userData.password.trim() === "" || userData.cnfPassword.trim() === "") {
+        if (userData.Username.trim() === "" || userData.phone.trim() === "" || userData.email.trim() === "" || userData.password.trim() === "" || userData.cnfPassword.trim() === "") {
             Alert.alert("Invalid Form", "Please fill in all fields");
             return;
-        } else if (submit) {
+        } else if (submit) {//checks if pass == cnfpass
             console.log(userData);
             navigation.navigate('Login');
         } else {
@@ -42,6 +43,7 @@ export default function Signup() {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <SafeAreaView style={{ flex: 1 }}>
+              <ScrollView contentContainerStyle={styles.scrollViewContent}>
                 <View style={styles.header}>
                     <Image
                         style={styles.tinyLogo}
@@ -60,6 +62,14 @@ export default function Signup() {
                             onChangeText={(text) => handleChange("Username", text)}
                             keyboardType="default"
                             icon={"person-circle-outline"}
+                        />
+                        <CustomTextField
+                            placeholder={'Phone number'}
+                            name={'phone'}
+                            value={userData.phone}
+                            onChangeText={(text) => handleChange("cnfPassword", text)}
+                            keyboardType="default"
+                            icon={"call"}
                         />
                         <CustomTextField
                             placeholder={'Email'}
@@ -86,7 +96,7 @@ export default function Signup() {
                             icon={"lock-closed"}
                         />
                     </View>
-                </View>
+
                 <View style={styles.bottomSection}>
                     <CustomButton
                         title={'Sign up'}
@@ -101,6 +111,7 @@ export default function Signup() {
                         </TouchableOpacity>
                     </View>
                 </View>
+               </ScrollView>
             </SafeAreaView>
         </KeyboardAvoidingView>
     );
@@ -116,6 +127,7 @@ const styles = StyleSheet.create({
         marginTop: 60, // Adjusted for gap
     },
     tinyLogo: {
+        marginTop: '20%',
         width: 280,
         height: 260,
     },

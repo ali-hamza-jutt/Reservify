@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform, Alert } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Platform, Alert,ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import CustomTextField from '../components/CustomTextField';
@@ -32,49 +32,51 @@ export default function Login() {
 
     return (
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} keyboardVerticalOffset={100} style={styles.container}>
-            <View style={styles.header}>
-                <Image
-                    style={styles.tinyLogo}
-                    source={require('../assets/login.png')}
-                />
-            </View>
-
-            <View style={styles.middleSection}>
-                <Text style={styles.text}>Login</Text>
-                <Text style={{ fontSize: 17 }}>Please Login to continue.</Text>
-                <View style={styles.inputSection}>
-                    <CustomTextField
-                        placeholder={'Email'}
-                        name={'email'}
-                        value={userData.email}
-                        onChangeText={(text) => handleChange("email", text)}
-                        keyboardType="default"
-                        icon={"mail-outline"}
-                    />
-                    <CustomTextField
-                        placeholder={'Password'}
-                        name={'password'}
-                        value={userData.password}
-                        onChangeText={(text) => handleChange("password", text)}
-                        keyboardType="default"
-                        icon={"lock-closed"}
+            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+                <View style={styles.header}>
+                    <Image
+                        style={styles.tinyLogo}
+                        source={require('../assets/login.png')}
                     />
                 </View>
-                <View style={styles.bottomSection}>
-                    <CustomButton
-                        title={'Login'}
-                        color={'#102C57'}
-                        textColor={'#FEFAF6'}
-                        onPress={handleSubmit}
-                    />
-                    <View style={{ flexDirection: 'row' }}>
-                        <Text style={{ fontSize: 17, fontWeight: '200', }}>Doesn't have an account? </Text>
-                        <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
-                            <Text style={{ fontSize: 17, textDecorationLine: 'underline' }}>Sign Up</Text>
-                        </TouchableOpacity>
+
+                <View style={styles.middleSection}>
+                    <Text style={styles.text}>Login</Text>
+                    <Text style={{ fontSize: 17 }}>Please Login to continue.</Text>
+                    <View style={styles.inputSection}>
+                        <CustomTextField
+                            placeholder={'Email'}
+                            name={'email'}
+                            value={userData.email}
+                            onChangeText={(text) => handleChange("email", text)}
+                            keyboardType="default"
+                            icon={"mail-outline"}
+                        />
+                        <CustomTextField
+                            placeholder={'Password'}
+                            name={'password'}
+                            value={userData.password}
+                            onChangeText={(text) => handleChange("password", text)}
+                            keyboardType="default"
+                            icon={"lock-closed"}
+                        />
+                    </View>
+                    <View style={styles.bottomSection}>
+                        <CustomButton
+                            title={'Login'}
+                            color={'#102C57'}
+                            textColor={'#FEFAF6'}
+                            onPress={handleSubmit}
+                        />
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{ fontSize: 17, fontWeight: '200', }}>Doesn't have an account? </Text>
+                            <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
+                                <Text style={{ fontSize: 17, textDecorationLine: 'underline' }}>Sign Up</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </KeyboardAvoidingView>
 
     );
