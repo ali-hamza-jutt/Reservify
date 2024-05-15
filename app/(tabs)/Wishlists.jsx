@@ -1,18 +1,26 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native'
+import React from 'react'
+import WishlistCard from '../../components/WishlistCard'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function Tab() {
+const Wishlists = () => {
   return (
-    <View style={styles.container}>
-        <Text>Wishlists</Text>
-    </View>
-  );
+    <SafeAreaView>
+      <View>
+        <Text style={styles.heading}>Wishlist</Text>
+        <WishlistCard/>
+      </View>
+    </SafeAreaView>
+  )
 }
 
+export default Wishlists
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-});
+  heading:{
+    fontSize:26,
+    fontWeight:'bold',
+    margin:10
+    
+  }
+})
