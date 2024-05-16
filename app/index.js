@@ -40,6 +40,8 @@ export default function Onboarding() {
                     textColor={'#102C57'}
                     onPress={() => {
                         navigation.navigate('Login');
+                        // navigation.navigate('(modals)/description');
+
                     }}
                 />
             </View>

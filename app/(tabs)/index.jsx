@@ -1,18 +1,17 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text,StyleSheet } from 'react-native'
+import React from 'react'
+import { Link } from 'expo-router'
 
-export default function Tab() {
+export default function index() {
   return (
     <View style={styles.container}>
-        <Text>explore</Text>
+      <Link href={'/(modals)/description'}>description</Link>
     </View>
-  );
+  )
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    paddingTop: 30,
   },
-});
+})
