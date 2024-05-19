@@ -39,7 +39,9 @@ export default function Onboarding() {
                     color={'#FEFAF6'}
                     textColor={'#102C57'}
                     onPress={() => {
-                        navigation.navigate('Login');
+                        // navigation.navigate('Login');
+                        navigation.navigate('(tabs)');
+
                     }}
                 />
             </View>

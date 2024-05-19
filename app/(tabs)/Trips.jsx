@@ -9,11 +9,13 @@ export default function Trips() {
   const navigation = useNavigation();
 
   return (
+
     <ScrollView contentContainerStyle={styles.container}>
       <FlightSearch />
       {/* <HotelDestionationSearch/> */}
       <HotelSearch/>
     </ScrollView>
+
   );
 }
 
