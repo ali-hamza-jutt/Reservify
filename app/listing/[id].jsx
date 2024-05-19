@@ -3,12 +3,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Pressable } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import LottieView from 'lottie-react-native';
+import { useLocalSearchParams } from 'expo-router'
+import hotels from '../../assets/hotel'
 
 
-export default function description() {
+export default function Page() {
+    const { id } = useLocalSearchParams()
+    console.log(id)
+    const listingData = hotels.find((item) => item.id == id) 
     const router = useRouter()
     const [loaded] = useFonts({
         PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
@@ -17,10 +22,6 @@ export default function description() {
 
     const heartRef = useRef(null);
     const [fav, setFav] = useState(false)
-    useEffect(() => {
-
-    }, [])
-
     function handleLike() {
         if (fav)
             heartRef?.current?.reset()
@@ -30,12 +31,12 @@ export default function description() {
         setFav(!fav)
     }
 
-    const [topImageSource, setTopImageSource] = useState(require('../../assets/room1.jpg'));
+    const [topImageSource, setTopImageSource] = useState({ uri: listingData.images[0] });
 
     const [bottomImageSource, setBottomImageSource] = useState([
-        require('../../assets/room2.jpg'),
-        require('../../assets/room3.jpg'),
-        require('../../assets/room4.jpg'),
+        { uri: listingData.images[1] },
+        { uri: listingData.images[2] },
+        { uri: listingData.images[3] },
     ]);
 
     const handleImagePress = (imageSource, index) => {
@@ -46,12 +47,14 @@ export default function description() {
             return updatedImages;
         });
 
-        console.log(bottomImageSource)
+        // console.log(bottomImageSource)
     };
 
     return (
         <View style={styles.container}>
+            <Stack.Screen options={{ headerShown: false }} />
             <StatusBar />
+            
             <View style={styles.backButton}>
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back-circle" size={35} color="white" />

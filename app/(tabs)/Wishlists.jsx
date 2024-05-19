@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   heading:{
     fontSize:26,
     fontWeight:'bold',
-    margin:10
+    margin:20
     
   }
 })

@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Link } from 'expo-router';
 
 const { width } = Dimensions.get('window');
 
@@ -11,7 +13,7 @@ const data = [
     cost: '$100 per night'
   },
   {
-    id: '2', // Corrected id to be unique
+    id: '2',
     accommodationType: 'Room',
     image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     cost: '$100 per night'
@@ -23,7 +25,7 @@ const data = [
     cost: '$100 per night'
   },
   {
-    id: '4', // Corrected id to be unique
+    id: '4',
     accommodationType: 'Room',
     image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
     cost: '$100 per night'
@@ -31,21 +33,21 @@ const data = [
 ];
 
 const WishlistCard = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       {data.map((item) => (
-        <TouchableOpacity
-          key={item.id}
-          onPress={() => navigation.navigate(item.screen)}
-          style={styles.card}
-        >
-          <Image
-            style={styles.image}
-            source={{ uri: item.image }}
-          />
-          <Text style={styles.type}>{item.accommodationType}</Text>
-          <Text style={styles.cost}>{item.cost}</Text>
-        </TouchableOpacity>
+        <Link href={'listing/1'} key={item.id} asChild>
+          <TouchableOpacity style={styles.card}>
+            <Image
+              style={styles.image}
+              source={{ uri: item.image }}
+            />
+            <Text style={styles.type}>{item.accommodationType}</Text>
+            <Text style={styles.cost}>{item.cost}</Text>
+          </TouchableOpacity>
+        </Link>
       ))}
     </View>
   );

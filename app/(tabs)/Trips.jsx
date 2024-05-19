@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 export default function Tab() {
   return (
     <View style={styles.container}>
-        <Text>Prips</Text>
+        <Text>Trips</Text>
     </View>
   );
 }
