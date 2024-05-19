@@ -4,9 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import CustomTextField from '../components/CustomTextField';
 import CustomButton from '../components/CustomButton';
 
-import {signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "./firebase";
-
 export default function Login() {
     const navigation = useNavigation();
 
@@ -24,23 +21,13 @@ export default function Login() {
         });
     }
 
-    const handleSubmit = async () => {
+    function handleSubmit() {
         if (userData.email.trim() === "" || userData.password.trim() === "") {
             Alert.alert("Invalid Form", "Please fill in all fields");
             return;
         }
         console.log(userData);
-        await signInWithEmailAndPassword(auth,userData.email, userData.password)
-        .then((userCredential) => {
-          console.log("user data,", userCredential.user.uid);
-          navigation.navigate('(tabs)')
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(error);
-        });
-        
+        navigation.navigate('(tabs)')
     }
 
     return (

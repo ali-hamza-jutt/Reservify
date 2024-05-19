@@ -17,7 +17,7 @@ export default function Profile() {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             <View style={styles.profileHeader}>
                 <Image
-                    source={require('../../assets/profile.png')}//577 x 577
+                    source={require('../../assets/profile.jpg')}
                     style={styles.profilePhoto}
                 />
                 <Text style={styles.userName}>Ali Hamza</Text>
