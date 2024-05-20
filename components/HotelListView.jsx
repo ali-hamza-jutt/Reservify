@@ -3,21 +3,29 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import useHotelHook from '../hooks/useHotelHook'
 
 
-export default function HotelListView({ dataList, category }) {
+export default function ExploreListView({ local, dataList, category }) {
   const [loading, setLoading] = useState(false);
   const listRef = useRef(null);
   const heartRefs = useRef([]);
+  const { fetchImages, images } = useHotelHook()
+  const [img, setImg] = useState([]);
 
   useEffect(() => {
     console.log("reloadlisting");
     setLoading(true);
 
+    fetchImages();
     setTimeout(() => {
       setLoading(false);
+      // setImg(images); // Update img state with fetched images
     }, 200);
   }, [category]);
+  // console.log("images-------------------------------------------");
+  // console.log();
+
 
   const handleLike = (index) => {
     const currentRef = heartRefs.current[index];
@@ -26,6 +34,8 @@ export default function HotelListView({ dataList, category }) {
         currentRef.reset();
         currentRef.isFavorited = false;
       } else {
+        console.log("============================")
+        console.log(img)
         currentRef.play(30, 144);
         currentRef.isFavorited = true;
       }
@@ -56,6 +66,10 @@ export default function HotelListView({ dataList, category }) {
             />
           </Pressable>
         </Animated.View>
+        <Text>hotel name</Text>
+        <Text>Rating</Text>
+        <Text>country</Text>
+        <Text>address</Text>
       </TouchableOpacity>
     </Link>
   );
@@ -63,7 +77,7 @@ export default function HotelListView({ dataList, category }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={loading ? [] : dataList}
+        data={loading ? [] : local}
         ref={listRef}
         renderItem={listItem}
         keyExtractor={(item) => item.id.toString()} // Ensure unique key for each item

@@ -9,7 +9,8 @@ const firebaseConfig = {
   storageBucket: "reservify-2e57f.appspot.com",
   messagingSenderId: "262884007659",
   appId: "1:262884007659:web:74c732292436ab3fac68ae",
-  measurementId: "G-C171X3S2KX"
+  measurementId: "G-C171X3S2KX",
+  databaseURL: "https://reservify-2e57f-default-rtdb.asia-southeast1.firebasedatabase.app/"
 };
 
 const app = initializeApp(firebaseConfig);

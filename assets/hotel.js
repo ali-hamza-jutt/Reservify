@@ -1,4 +1,4 @@
-export default hotels = [
+export default localhotels = [
     {
         id: 1,
         images: [

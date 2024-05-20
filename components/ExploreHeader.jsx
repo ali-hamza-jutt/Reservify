@@ -135,11 +135,12 @@ export default function ExploreHeader({ onCategoryChanged }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
     paddingTop: 30,
     gap: 20,
-    // backgroundColor: 'white',
+    // backgroundColor: 'black',
   },
   textHeader: {
     flexDirection: 'row',
@@ -172,6 +173,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
+    marginb: 7,
+    // backgroundColor: 'red'
   },
   catoryText: {
     fontSize: 14,
