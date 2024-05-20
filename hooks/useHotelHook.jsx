@@ -86,7 +86,7 @@ const useHotelHook = () => {
         onValue(dbRef, (snapshot) => {
             let data = snapshot.val();
             console.log("--------------------------------------------------------")
-            console.log(data[0].image_url)
+            console.log(data)
             setImg(data)
         })
     };
