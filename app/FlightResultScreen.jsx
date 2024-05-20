@@ -47,7 +47,7 @@ const FlightResultScreen = () => {
     const departureTime = `${departureHours < 10 ? '0' : ''}${departureHours}:${departureMinutes < 10 ? '0' : ''}${departureMinutes}`;
 
     return (
-      <TouchableOpacity style={styles.cardContainer} onPress={() => handleBooking(item)}>
+      <TouchableOpacity style={styles.cardContainer}>
         <View style={styles.itemContainer}>
           <Image source={{ uri: item.imageUrl }} style={styles.logo} />
           <View style={styles.detailsContainer}>
@@ -85,14 +85,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: "#fff",
   },
   flatList: {
-    backgroundColor: '#2cd3db',
+    backgroundColor: '#fff',
   },
   cardContainer: {
     flexDirection: 'column',
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f9f9f9',
     borderRadius: 10,
     marginBottom: 10,
     padding: 15,

@@ -1,119 +1,91 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import searchFlights from '../apis/searchFlight';
 
-// Define the getRandomPrice function before using it
-const getRandomPrice = () => {
-  return Math.floor(Math.random() * (2000 - 1200 + 1) + 1200);
-};
+const FlightSearch = () => {
+  const navigation = useNavigation();
 
-const FlightResultScreen = () => {
-  const route = useRoute();
-  const { flightData } = route.params;
+  const [formData, setFormData] = useState({
+    fromId: '',
+    toId: '',
+    departureDate: '',
+    adults: ''
+  });
 
-  const flights = flightData.data.flights.map(flight => ({
-    id: flight.id,
-    airline: flight.bounds[0].segments[0].marketingCarrier.name,
-    flightNumber: flight.bounds[0].segments[0].flightNumber,
-    duration: flight.bounds[0].segments[0].duration,
-    cabinClassName: flight.bounds[0].segments[0].cabinClassName,
-    arrivedAt: flight.bounds[0].segments[0].arrivedAt,
-    numberOfStops: flight.bounds[0].segments.length - 1,
-    imageUrl: `https://www.gstatic.com/flights/airline_logos/70px/${flight.bounds[0].segments[0].marketingCarrier.code}.png`,
-    price: getRandomPrice(), // Call getRandomPrice function
-  }));
-
-  // Function to convert milliseconds to hours and minutes format
-  const formatDuration = (milliseconds) => {
-    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
-    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours} hr ${minutes} mnts`;
+  const handleChange = (name, value) => {
+    setFormData({ ...formData, [name]: value });
   };
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity style={styles.cardContainer} onPress={() => handleBooking(item)}>
-      <View style={styles.itemContainer}>
-        <Image source={{ uri: item.imageUrl }} style={styles.logo} />
-        <View style={styles.detailsContainer}>
-          <Text style={styles.airlineName}>{item.airline}</Text>
-          <Text>Flight Number: {item.flightNumber}</Text>
-          <Text>Duration: {formatDuration(item.duration)}</Text>
-          <Text>Cabin Class: {item.cabinClassName}</Text>
-          <Text>Arrival Time: {item.arrivedAt}</Text>
-          <Text>Number of Stops: {item.numberOfStops}</Text>
-          <Text>Price: ${item.price}</Text>
-        </View>
-      </View>
-      <View style={styles.buttonContainer}>
-        <Text style={styles.bookNowText}>Book Now</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const handleSubmit = async () => {
+    const { fromId, toId, departureDate, adults } = formData;
+    console.log(formData);
+    if (!fromId || !toId || !departureDate || !adults) {
+      Alert.alert('Error', 'Please fill in all required fields');
+      return;
+    }
 
-  const handleBooking = (flight) => {
-    // Handle booking logic here
-    console.log('Booking flight:', flight);
+    try {
+      const flightData = await searchFlights(formData);
+      console.log('Flight data:', flightData);
+      navigation.navigate('FlightResultScreen', { flightData });
+    } catch (error) {
+      Alert.alert('Error', 'Failed to fetch flight data');
+    }
   };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={flights}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        style={styles.flatList}
+    <>
+      <Text style={styles.label}>From:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.fromId}
+        onChangeText={(text) => handleChange('fromId', text)}
+        placeholder="Enter from (e.g., BOM.AIRPORT)"
       />
-    </View>
+
+      <Text style={styles.label}>To:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.toId}
+        onChangeText={(text) => handleChange('toId', text)}
+        placeholder="Enter destination (e.g., DEL.AIRPORT)"
+      />
+
+      <Text style={styles.label}>Departure Date:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.departureDate}
+        onChangeText={(text) => handleChange('departureDate', text)}
+        placeholder="Enter departure date (YYYY-MM-DD)"
+      />
+
+      <Text style={styles.label}>Adults:</Text>
+      <TextInput
+        style={styles.input}
+        value={formData.adults}
+        onChangeText={(text) => handleChange('adults', text)}
+        placeholder="No of adults"
+        keyboardType="numeric"
+      />
+
+      <Button title="Search Flights" onPress={handleSubmit} />
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: '#606060',
-    margin:10
-  },
-  flatList: {
-    backgroundColor: '#f9f9f9',
-  },
-  cardContainer: {
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderRadius: 10,
-    marginBottom: 10,
-    padding: 15,
-    alignItems: 'center',
-  },
-  itemContainer: {
-    flexDirection: 'row',
-    flex: 1,
-  },
-  logo: {
-    width: 100, // Set the width
-    height: 100, // Set the height
-    marginRight: 15,
-    borderRadius: 10,
-  },
-  detailsContainer: {
-    flex: 1,
-  },
-  airlineName: {
-    fontWeight: 'bold',
+  label: {
     fontSize: 16,
-    marginBottom: 5,
+    marginBottom: 8,
   },
-  buttonContainer: {
-    backgroundColor: '#FFB900',
-    borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    alignSelf: 'flex-start',
-  },
-  bookNowText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    marginBottom: 16,
+    paddingHorizontal: 8,
   },
 });
 
-export default FlightResultScreen;
+export default FlightSearch;
