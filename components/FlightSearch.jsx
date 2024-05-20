@@ -7,10 +7,10 @@ const FlightSearch = () => {
   const navigation = useNavigation();
 
   const [formData, setFormData] = useState({
-    from: '',
-    to: '',
+    fromId: '',
+    toId: '',
     departureDate: '',
-    adult: ''
+    adults: ''
   });
 
   const handleChange = (name, value) => {
@@ -18,8 +18,9 @@ const FlightSearch = () => {
   };
 
   const handleSubmit = async () => {
-    const { from, to, departureDate, adult } = formData;
-    if (!from || !to || !departureDate || !currency) {
+    const { fromId, toId, departureDate, adults } = formData;
+    console.log(formData);
+    if (!fromId || !toId || !departureDate || !adults) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
@@ -38,16 +39,16 @@ const FlightSearch = () => {
       <Text style={styles.label}>From:</Text>
       <TextInput
         style={styles.input}
-        value={formData.from}
-        onChangeText={(text) => handleChange('from', text)}
+        value={formData.fromId}
+        onChangeText={(text) => handleChange('fromId', text)}
         placeholder="Enter from (e.g., BOM.AIRPORT)"
       />
 
       <Text style={styles.label}>To:</Text>
       <TextInput
         style={styles.input}
-        value={formData.to}
-        onChangeText={(text) => handleChange('to', text)}
+        value={formData.toId}
+        onChangeText={(text) => handleChange('toId', text)}
         placeholder="Enter destination (e.g., DEL.AIRPORT)"
       />
 
@@ -59,15 +60,14 @@ const FlightSearch = () => {
         placeholder="Enter departure date (YYYY-MM-DD)"
       />
 
-      <Text style={styles.label}>Adult:</Text>
+      <Text style={styles.label}>Adults:</Text>
       <TextInput
         style={styles.input}
-        value={formData.adult}
-        onChangeText={(text) => handleChange('adult', text)}
+        value={formData.adults}
+        onChangeText={(text) => handleChange('adults', text)}
         placeholder="No of adults"
+        keyboardType="numeric"
       />
-
-
 
       <Button title="Search Flights" onPress={handleSubmit} />
     </>

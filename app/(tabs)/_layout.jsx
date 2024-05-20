@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Ionicons,MaterialCommunityIcons,MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
+import searchFlights from '../../apis/searchFlight';
 
 const screenOptions = {
     tabBarShowLabel: false,
@@ -17,7 +18,6 @@ const screenOptions = {
 export default function TabLayout() {
 
   useEffect(()=>{
-    // fetchHotelDetails();
     // searchFlights();
   })
   return (
