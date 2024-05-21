@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: 25,
     gap: 20,
     // backgroundColor: 'black',
   },
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 20,
-    marginb: 7,
+    // margin: 7,
     // backgroundColor: 'red'
   },
   catoryText: {

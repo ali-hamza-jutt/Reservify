@@ -1,5 +1,14 @@
 export default localhotels = [
     {
+        id: 0,
+        images: [
+            "https://a0.muscache.com/im/pictures/miso/Hosting-30931885/original/6e6b084c-c60f-4470-a5a1-052eaf784ffb.jpeg?im_w=1200",
+            "https://a0.muscache.com/im/pictures/miso/Hosting-30931885/original/a9eb8c5c-c53c-4e38-9fe9-92a6a3e2c938.jpeg?im_w=720",
+            "https://a0.muscache.com/im/pictures/miso/Hosting-30931885/original/06a2d878-2eeb-471b-beec-2662ad8b658c.jpeg?im_w=720",
+            "https://a0.muscache.com/im/pictures/miso/Hosting-30931885/original/85f198f0-c119-404c-96c0-fe3694920b1b.jpeg?im_w=720",
+        ]
+    },
+    {
         id: 1,
         images: [
             "https://a0.muscache.com/im/pictures/airflow/Hosting-33677783/original/e246df5f-1425-4eb4-b148-5b65da7e3f0a.jpg?im_w=1200",

@@ -3,28 +3,38 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
-import useHotelHook from '../hooks/useHotelHook'
+import useHotelHook from '../hooks/useHotelHook';
 
-
-export default function ExploreListView({ local, dataList, category }) {
-  const [loading, setLoading] = useState(false);
+export default function ExploreListView({ dataList, category }) {
+  const [loading, setLoading] = useState(true);
   const listRef = useRef(null);
   const heartRefs = useRef([]);
-  const { fetchImages, images } = useHotelHook()
-  const [img, setImg] = useState([]);
+  const { fetchImages, images } = useHotelHook();
 
   useEffect(() => {
-    console.log("reloadlisting");
-    setLoading(true);
-
-    fetchImages();
-    setTimeout(() => {
+    const fetchData = async () => {
+      console.log("reloadlisting");
+      setLoading(true);
+      await fetchImages();
       setLoading(false);
-      // setImg(images); // Update img state with fetched images
-    }, 200);
+    };
+    fetchData();
+
   }, [category]);
-  // console.log("images-------------------------------------------");
-  // console.log();
+
+  console.log("data from hotels")
+  
+  if (item.image_url && item.image_url[0]) {
+    dataList.map(item => {
+      console.log('Hotel Name:', item.hotel_name);
+      console.log('Rating:', item.review_score);
+      console.log('Country:', item.country_trans);
+      console.log('Address:', item.address);
+      if (item.max_photo_url) {
+        console.log('Photo URL:', item.max_photo_url);
+      }
+    });
+  }
 
 
   const handleLike = (index) => {
@@ -34,22 +44,21 @@ export default function ExploreListView({ local, dataList, category }) {
         currentRef.reset();
         currentRef.isFavorited = false;
       } else {
-        console.log("============================")
-        console.log(img)
+        console.log("============================");
         currentRef.play(30, 144);
         currentRef.isFavorited = true;
       }
     }
-  }
+  };
 
   const listItem = ({ item, index }) => (
-    <Link href={`/listing/${item.id}`} asChild>
+    <Link href={`/listing/${item.id || index}`} asChild>
       <TouchableOpacity>
         <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
           <Image
             style={styles.image}
             source={{
-              uri: item.images[0],
+              uri: item.image_url && item.image_url[0] ? item.image_url[0] : 'default_image_url', // Default URL
             }}
           />
           <Pressable style={styles.icon} onPress={() => handleLike(index)}>
@@ -66,10 +75,10 @@ export default function ExploreListView({ local, dataList, category }) {
             />
           </Pressable>
         </Animated.View>
-        <Text>hotel name</Text>
-        <Text>Rating</Text>
-        <Text>country</Text>
-        <Text>address</Text>
+        <Text>{item.name || 'Unknown Hotel'}</Text>
+        <Text>{item.rating || 'No Rating'}</Text>
+        <Text>{item.country || 'Unknown Country'}</Text>
+        <Text>{item.address || 'Unknown Address'}</Text>
       </TouchableOpacity>
     </Link>
   );
@@ -77,10 +86,10 @@ export default function ExploreListView({ local, dataList, category }) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={loading ? [] : local}
+        data={loading ? [] : images}
         ref={listRef}
         renderItem={listItem}
-        keyExtractor={(item) => item.id.toString()} // Ensure unique key for each item
+        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()} // Ensure unique key for each item
       />
     </View>
   );
@@ -105,15 +114,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 30,
     bottom: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Transparent white background for glossy effect
+    backgroundColor: 'rgba(0, 0, 0, 0.2)', // Transparent white background for glossy effect
     borderRadius: 30,
-    shadowColor: '#000',
+    shadowColor: 'black',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 3,
     elevation: 5, // For Android shadow
     borderWidth: 1, // Adding border for glossy effect
-    borderColor: 'rgba(255, 255, 255, 0.5)', // White border with transparency
+    // borderColor: 'rgba(255, 255, 255, 0.5)', // White border with transparency
+    borderColor: 'rgba(255, 255, 255 , 0.5)', // White border with transparency
     overflow: 'hidden', // Ensure content respects the border radius
   },
 

@@ -1,8 +1,10 @@
 import axios from 'axios'
-import {app} from "../app/firebase";
+import { app } from "../app/firebase";
 import { getDatabase, ref, onValue, set, update, remove } from "firebase/database";
 import { useState } from 'react';
 const useHotelHook = () => {
+    const [images, setImg] = useState([])
+    const [listing, setListing] = useState([])
     const search = async (formData) => {
         const options = {
             method: 'GET',
@@ -45,14 +47,14 @@ const useHotelHook = () => {
             method: 'GET',
             url: 'https://booking-com.p.rapidapi.com/v1/hotels/search',
             params: {
-                checkout_date: '2024-06-21',
+                checkout_date: '2024-06-28',
                 order_by: 'popularity',
                 filter_by_currency: 'AED',
                 room_number: '1',
                 dest_id: '-2602512',
                 dest_type: 'city',
                 adults_number: '1',
-                checkin_date: '2024-05-21',
+                checkin_date: '2024-06-4',
                 locale: 'en-gb',
                 units: 'metric',
                 include_adjacency: 'true',
@@ -71,27 +73,26 @@ const useHotelHook = () => {
             const response = await axios.request(options);
             console.log("Hook called");
             // console.log(response.data);
-            return response.data; // Return the response data for further processing
+            setListing(response.data.result)
         } catch (error) {
             console.error(error);
             throw new Error('Failed to fetch hotels');
         }
     }
-    const [images,setImg] = useState()
-    const fetchImages = () => {
-        
+
+    const fetchImages = async () => {
+
         const db = getDatabase(app);
         const dbRef = ref(db, 'images');
         console.log("data receiving")
         onValue(dbRef, (snapshot) => {
             let data = snapshot.val();
-            console.log("--------------------------------------------------------")
-            console.log(data)
+            console.log(data);
             setImg(data)
         })
     };
 
-    return { search, dummy, fetchImages,images };
+    return { search, dummy, fetchImages, images, listing };
 };
 
 export default useHotelHook;

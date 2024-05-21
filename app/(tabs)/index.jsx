@@ -21,12 +21,21 @@ export default function Index() {
 
     const [selectedCategory, setSelectedCategory] = useState('Hotels')
     const SelectedComponent = categoryComponents[selectedCategory]
-    const [hookData,setHookData] = useState()
-    const {  } = useHotelHook()
+    const { search, dummy, listing } = useHotelHook()
 
     const onDataChanged = (category) => {
         setSelectedCategory(category)
     }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            console.log("api data listing")
+            await dummy()
+            console.log("api data recieved")
+            console.log(listing)
+        };
+        fetchData();
+    }, [selectedCategory])
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -36,7 +45,7 @@ export default function Index() {
                 </View>
                 <View style={styles.listing}>
                     {SelectedComponent ? (
-                        <SelectedComponent local={localhotels} category={selectedCategory} />
+                        <SelectedComponent dataList={listing} category={selectedCategory} />
                     ) : (
                         <Text>No component found for {selectedCategory}</Text>
                     )}
@@ -54,7 +63,7 @@ const styles = StyleSheet.create({
     header: {
         flex: 1.5,
         // backgroundColor: 'brown',
-        padding: 15,
+        padding: 20,
     },
     listing: {
         flex: 6,

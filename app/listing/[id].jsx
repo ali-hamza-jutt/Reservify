@@ -14,6 +14,7 @@ export default function Page() {
     const { id } = useLocalSearchParams()
     console.log(id)
     const listingData = hotels.find((item) => item.id == id) 
+    console.log('listingData',listingData)
     const router = useRouter()
     const [loaded] = useFonts({
         PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
