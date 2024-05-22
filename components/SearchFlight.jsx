@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+// Import cityToIataMapping
+import cityToIataMapping from '../data/cityToIataMapping';
+
 const FlightSearch = () => {
   const navigation = useNavigation();
 
@@ -12,8 +15,37 @@ const FlightSearch = () => {
     adults: ''
   });
 
+  // State for suggestions
+  const [fromSuggestions, setFromSuggestions] = useState([]);
+  const [toSuggestions, setToSuggestions] = useState([]);
+
   const handleChange = (name, value) => {
+    // Update form data
     setFormData({ ...formData, [name]: value });
+
+    // Get suggestions based on current input value
+    const suggestions = value.trim() !== '' ? Object.keys(cityToIataMapping).filter(city =>
+      city.toLowerCase().startsWith(value.toLowerCase())
+    ) : [];
+
+    // Update suggestions based on input field
+    if (name === 'fromId') {
+      setFromSuggestions(suggestions);
+    } else if (name === 'toId') {
+      setToSuggestions(suggestions);
+    }
+  };
+
+  const handleSelectSuggestion = (name, suggestion) => {
+    // Update form data with selected suggestion
+    setFormData({ ...formData, [name]: suggestion });
+
+    // Close suggestion list
+    if (name === 'fromId') {
+      setFromSuggestions([]);
+    } else if (name === 'toId') {
+      setToSuggestions([]);
+    }
   };
 
   const handleSubmit = () => {
@@ -22,7 +54,14 @@ const FlightSearch = () => {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
-    navigation.navigate('FlightResultScreen', { formData });
+
+    // Map user input to corresponding IATA code
+    const fromIata = cityToIataMapping[fromId] || '';
+    const toIata = cityToIataMapping[toId] || '';
+
+    // Navigate to flight result screen with form data
+    
+    navigation.navigate('FlightResultScreen', { formData: { fromId: fromIata, toId: toIata, departureDate, adults } });
   };
 
   return (
@@ -34,6 +73,10 @@ const FlightSearch = () => {
         onChangeText={(text) => handleChange('fromId', text)}
         placeholder="Enter from (e.g., BOM.AIRPORT)"
       />
+      {/* Suggestions for "From" field */}
+      {fromSuggestions.length > 0 && fromSuggestions.map((suggestion, index) => (
+        <Text key={index} onPress={() => handleSelectSuggestion('fromId', suggestion)}>{suggestion}</Text>
+      ))}
 
       <Text style={styles.label}>To:</Text>
       <TextInput
@@ -42,6 +85,10 @@ const FlightSearch = () => {
         onChangeText={(text) => handleChange('toId', text)}
         placeholder="Enter destination (e.g., DEL.AIRPORT)"
       />
+      {/* Suggestions for "To" field */}
+      {toSuggestions.length > 0 && toSuggestions.map((suggestion, index) => (
+        <Text key={index} onPress={() => handleSelectSuggestion('toId', suggestion)}>{suggestion}</Text>
+      ))}
 
       <Text style={styles.label}>Departure Date:</Text>
       <TextInput

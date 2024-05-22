@@ -1,6 +1,4 @@
-// cityToIataMapping.ts
-
-const cityToIataMapping: { [key: string]: string } = {
+export default  cityToIataMapping = {
   "New York": "JFK",
   "London": "LHR",
   "Tokyo": "HND",
@@ -96,4 +94,4 @@ const cityToIataMapping: { [key: string]: string } = {
   "Faisalabad": "LYP",
 };
 
-export default cityToIataMapping;
+

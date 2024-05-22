@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
+// Import the cityToIataMapping data
+import cityToIataMapping from '../data/cityToIataMapping';
 
 const FlightSearch = () => {
   const navigation = useNavigation();
@@ -12,18 +15,35 @@ const FlightSearch = () => {
     adults: ''
   });
 
+  const [suggestions, setSuggestions] = useState([]);
+  const [selectedField, setSelectedField] = useState('');
+
+  // Function to handle changes in the input fields
   const handleChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
+    setSelectedField(name);
+
+    // Filter the cityToIataMapping based on user input
+    const matchingCities = Object.keys(cityToIataMapping).filter(city =>
+      city.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSuggestions(matchingCities);
   };
 
+  // Function to handle selection from the suggestions
+  const handleSelectSuggestion = (city) => {
+    setFormData({ ...formData, [selectedField]: cityToIataMapping[city] });
+    setSuggestions([]);
+  };
+
+  // Function to handle form submission
   const handleSubmit = () => {
-    console.log('Hailo');
     const { fromId, toId, departureDate, adults } = formData;
     if (!fromId || !toId || !departureDate || !adults) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
-    console.log('Form:', formData);
     navigation.navigate('FlightResultScreen', { formData });
   };
 
@@ -36,6 +56,18 @@ const FlightSearch = () => {
         onChangeText={(text) => handleChange('fromId', text)}
         placeholder="Enter from (e.g., BOM.AIRPORT)"
       />
+      {/* Render suggestions */}
+      {suggestions.length > 0 && (
+        <FlatList
+          data={suggestions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity onPress={() => handleSelectSuggestion(item)}>
+              <Text style={styles.suggestion}>{item}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      )}
 
       <Text style={styles.label}>To:</Text>
       <TextInput
@@ -83,6 +115,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 8,
+  },
+  suggestion: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
 });
 

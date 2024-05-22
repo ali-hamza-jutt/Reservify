@@ -6,6 +6,7 @@ import HotelSearch from '../../components/HotelSearch';
 import SearchFlight from '../../components/SearchFlight';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import InputField1 from '../../components/InputField'
+import DatePickerField from '../../components/DatePickerField'
 
 
 export default function Trips() {
@@ -22,6 +23,8 @@ export default function Trips() {
         {/* <InputField1/> */}
 
         {/* <HotelSearch/> */}
+        {/* <FlightSearch/> */}
+      <DatePickerField/>
       </SafeAreaView>
     </KeyboardAvoidingView>
   );

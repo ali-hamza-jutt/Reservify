@@ -4,10 +4,15 @@ import { useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import searchFlights from '../apis/searchFlight';
 
-const FlightResultScreen = () => {
+const FlightsListView = () => {
   const route = useRoute();
-  const { formData } = route.params;
-  console.log(formData)
+  const formData={
+    fromId:'MSY',
+    toId:'ORY',
+    departureDate:'2024-05-23',
+    adults:'1'
+  }
+
   const [flights, setFlights] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -161,4 +166,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FlightResultScreen;
+export default FlightsListView;
