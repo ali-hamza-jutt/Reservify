@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, SafeAreaView, Animated } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { Ionicons, MaterialIcons, MaterialCommunityIcons, Fontisto } from '@expo/vector-icons'
+import { Ionicons, MaterialIcons, MaterialCommunityIcons, Fontisto,FontAwesome5 } from '@expo/vector-icons'
 import * as Haptics from 'expo-haptics';
 import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -10,7 +10,7 @@ const categories = [
   {
     name: 'Hotels',
     icon: 'bed',
-    iconType: MaterialIcons
+    iconType: FontAwesome5
   },
   {
     name: 'Flights',

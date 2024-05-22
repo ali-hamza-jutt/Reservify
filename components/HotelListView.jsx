@@ -1,14 +1,16 @@
 import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'expo-router';
+import { Link,useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import useHotelHook from '../hooks/useHotelHook';
 
 export default function ExploreListView({ dataList, category }) {
   const [loading, setLoading] = useState(true);
+  const [updatedDataList, setUpdatedDataList] = useState([]);
   const listRef = useRef(null);
   const heartRefs = useRef([]);
+  const router = useRouter();
   const { fetchImages, images } = useHotelHook();
 
   useEffect(() => {
@@ -19,74 +21,60 @@ export default function ExploreListView({ dataList, category }) {
       setLoading(false);
     };
     fetchData();
-
   }, [category]);
 
-  console.log("data from hotels")
-  
-  if (item.image_url && item.image_url[0]) {
-    dataList.map(item => {
-      console.log('Hotel Name:', item.hotel_name);
-      console.log('Rating:', item.review_score);
-      console.log('Country:', item.country_trans);
-      console.log('Address:', item.address);
-      if (item.max_photo_url) {
-        console.log('Photo URL:', item.max_photo_url);
-      }
-    });
-  }
+  useEffect(() => {
+    const updateDataListWithImages = () => {
+      const newDataList = dataList.map((item, index) => ({
+        hotel_id: item.hotel_id,
+        hotel_name: item.hotel_name,
+        review_score: item.review_score,
+        country_trans: item.country_trans,
+        address: item.address,
+        image_url: images[index] ? images[index].image_url : []
+      }));
+      setUpdatedDataList(newDataList);
+    };
 
-
-  const handleLike = (index) => {
-    const currentRef = heartRefs.current[index];
-    if (currentRef) {
-      if (currentRef.isFavorited) {
-        currentRef.reset();
-        currentRef.isFavorited = false;
-      } else {
-        console.log("============================");
-        currentRef.play(30, 144);
-        currentRef.isFavorited = true;
-      }
+    if (!loading) {
+      updateDataListWithImages();
     }
-  };
+  }, [dataList, loading]);
+
+
+  console.log("data from hotels");
+  console.log(updatedDataList);
 
   const listItem = ({ item, index }) => (
-    <Link href={`/listing/${item.id || index}`} asChild>
-      <TouchableOpacity>
-        <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
-          <Image
-            style={styles.image}
-            source={{
-              uri: item.image_url && item.image_url[0] ? item.image_url[0] : 'default_image_url', // Default URL
-            }}
-          />
-          <Pressable style={styles.icon} onPress={() => handleLike(index)}>
-            <LottieView
-              ref={(ref) => {
-                heartRefs.current[index] = ref;
-                if (ref) {
-                  ref.isFavorited = false;
-                }
-              }}
-              style={styles.lottieView}
-              loop={false}
-              source={require('../assets/lottie/heart.json')}
-            />
-          </Pressable>
-        </Animated.View>
-        <Text>{item.name || 'Unknown Hotel'}</Text>
-        <Text>{item.rating || 'No Rating'}</Text>
-        <Text>{item.country || 'Unknown Country'}</Text>
-        <Text>{item.address || 'Unknown Address'}</Text>
-      </TouchableOpacity>
-    </Link>
+    // <Link href={`/listing/${index}`} asChild>
+    <TouchableOpacity onPress={() => router.push({
+      pathname: `/listing/${index}`,
+      params: { hotelData: JSON.stringify(item) }
+    })}>
+      <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
+        <Image
+          style={styles.image}
+          source={{
+            uri: item.image_url && item.image_url[0] ? item.image_url[0] : 'default_image_url', // Default URL
+          }}
+        />
+      </Animated.View>
+      {/* {console.log(item.name)}
+      {console.log(item.rating)}
+      {console.log(item.country)}
+      {console.log(item.address)} */}
+      <Text>{item.hotel_name || 'Unknown Hotel'}</Text>
+      <Text>{item.country_trans || 'No Rating'}</Text>
+      <Text>{item.address || 'Unknown Country'}</Text>
+      <Text>{item.review_score || 'Unknown Address'}</Text>
+    </TouchableOpacity>
+    // </Link>
   );
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={loading ? [] : images}
+        data={loading ? [] : updatedDataList}
         ref={listRef}
         renderItem={listItem}
         keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()} // Ensure unique key for each item

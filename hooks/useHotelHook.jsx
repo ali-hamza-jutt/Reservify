@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { app } from "../app/firebase";
-import { getDatabase, ref, onValue, set, update, remove } from "firebase/database";
+import { getDatabase, ref, onValue, set, remove, get, child, update } from "firebase/database";
+
 import { useState } from 'react';
 const useHotelHook = () => {
     const [images, setImg] = useState([])
@@ -72,7 +73,12 @@ const useHotelHook = () => {
         try {
             const response = await axios.request(options);
             console.log("Hook called");
-            // console.log(response.data);
+            console.log("=====================================================");
+            console.log();
+            console.log()
+            console.log(response.data.result[0].hotel_id)
+            console.log()
+            console.log()
             setListing(response.data.result)
         } catch (error) {
             console.error(error);
@@ -92,7 +98,55 @@ const useHotelHook = () => {
         })
     };
 
-    return { search, dummy, fetchImages, images, listing };
+    const addWishList = async (wishedObj, userId) => {
+        try {
+            console.log("wishedObj", wishedObj);
+            const db = getDatabase(app);
+            const dbRef = ref(db, `users/${userId}/wishlist`);
+
+            // Here we assume wishedObj has a unique identifier you can use as the key
+            const newWishRef = ref(db, `users/${userId}/wishlist/${wishedObj.hotel_id}`);
+            await set(newWishRef, wishedObj);
+            console.log("Wishlist updated successfully");
+        } catch (error) {
+            console.error("Error adding to wishlist:", error);
+        }
+    };
+
+    const removeWishList = async (hotelId, userId) => {
+        try {
+            console.log("Removing wishlist item:", hotelId);
+            const db = getDatabase(app);
+            const wishRef = ref(db, `users/${userId}/wishlist/${hotelId}`);
+            await remove(wishRef);
+            console.log("Wishlist item removed successfully");
+        } catch (error) {
+            console.error("Error removing from wishlist:", error);
+        }
+    };
+
+    const isHotelInWishlist = async (hotelId, userId) => {
+        try {
+            const db = getDatabase(app);
+            const wishlistRef = ref(db, `users/${userId}/wishlist/${hotelId}`);
+            const snapshot = await get(wishlistRef);
+            return snapshot.exists();
+        } catch (error) {
+            console.error("Error checking wishlist status:", error);
+            return false;
+        }
+    };
+
+    return {
+        search,
+        dummy,
+        fetchImages,
+        addWishList,
+        removeWishList,
+        isHotelInWishlist,
+        images,
+        listing
+    };
 };
 
 export default useHotelHook;

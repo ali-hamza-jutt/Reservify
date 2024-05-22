@@ -1,61 +1,72 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Pressable } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, Pressable, ScrollView } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
-import { Stack, useRouter } from 'expo-router';
+import { Stack, useRouter, useLocalSearchParams } from 'expo-router';
 import CustomButton from '../../components/CustomButton';
 import LottieView from 'lottie-react-native';
-import { useLocalSearchParams } from 'expo-router'
 import hotels from '../../assets/hotel'
+import useHotelHook from '../../hooks/useHotelHook';
 
 
 export default function Page() {
-    const { id } = useLocalSearchParams()
-    console.log(id)
-    const listingData = hotels.find((item) => item.id == id) 
-    console.log('listingData',listingData)
-    const router = useRouter()
+    const { hotelData } = useLocalSearchParams();
+    const { addWishList,removeWishList,isHotelInWishlist } = useHotelHook(); // Ensure useHotelHook is called as a function
+    const router = useRouter();
     const [loaded] = useFonts({
         PoppinsRegular: require('../../assets/fonts/Poppins-Regular.ttf'),
         PoppinsSemiBold: require('../../assets/fonts/Poppins-SemiBold.ttf'),
     });
 
+    const listingData = JSON.parse(hotelData);
+    console.log('listingData', listingData);
+
     const heartRef = useRef(null);
-    const [fav, setFav] = useState(false)
-    function handleLike() {
-        if (fav)
-            heartRef?.current?.reset()
-        else
-            heartRef?.current?.play(30, 144)
+    const [fav, setFav] = useState(false);
 
-        setFav(!fav)
-    }
+    useEffect(() => {
+        const checkWishlistStatus = async () => {
+          const isInWishlist = await isHotelInWishlist(listingData.hotel_id, "userId1");
+          setFav(isInWishlist);
+          if (isInWishlist) {
+            heartRef?.current?.play(144, 144); // Ensure the heart is filled if the hotel is in the wishlist
+          }
+        };
+        checkWishlistStatus();
+      }, []);
 
-    const [topImageSource, setTopImageSource] = useState({ uri: listingData.images[0] });
+    const handleLike = () => {
+        if (fav) {
+            heartRef?.current?.reset();
+            removeWishList(listingData.hotel_id,"userId1")
+        } else {
+            heartRef?.current?.play(30, 144);
+            addWishList(listingData,"userId1");
+            console.log('liked');
+        }
+        setFav(!fav);
+    };
 
-    const [bottomImageSource, setBottomImageSource] = useState([
-        { uri: listingData.images[1] },
-        { uri: listingData.images[2] },
-        { uri: listingData.images[3] },
-    ]);
+    const [topImageSource, setTopImageSource] = useState({ uri: listingData.image_url[0] });
+    const [bottomImageSource, setBottomImageSource] = useState(
+        listingData.image_url.slice(1, 4).map((url) => ({ uri: url }))
+    );
 
     const handleImagePress = (imageSource, index) => {
         setTopImageSource(imageSource);
-        setBottomImageSource(prevImages => {
+        setBottomImageSource((prevImages) => {
             const updatedImages = [...prevImages];
             updatedImages[index] = topImageSource;
             return updatedImages;
         });
-
-        // console.log(bottomImageSource)
     };
-
     return (
+        // <ScrollView>
         <View style={styles.container}>
             <Stack.Screen options={{ headerShown: false }} />
             <StatusBar />
-            
+
             <View style={styles.backButton}>
                 <TouchableOpacity onPress={() => router.back()}>
                     <Ionicons name="arrow-back-circle" size={35} color="white" />
@@ -79,29 +90,34 @@ export default function Page() {
                 </View>
 
             </View>
-            <View style={styles.bottom}>
+            <ScrollView style={styles.bottom}>
                 <View>
-                    <Text style={{ fontSize: 40, fontFamily: "PoppinsSemiBold", fontWeight: '400', marginBottom: 10 }}>Aura House</Text>
+                    <Text style={{ fontSize: 30, fontFamily: "PoppinsSemiBold", fontWeight: '400', marginBottom: 10 }}>{listingData.hotel_name}</Text>
+                    <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
+                    <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
+                    <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
+                    <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
+                    <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
                     <Text style={styles.descriptionText}>Aura house is a beautiful and unique eco-bamboo house built on the west bank of the Ayung River, facing east to admire the sunrise.</Text>
                 </View>
+            </ScrollView>
+            <View style={styles.buttonSection}>
+                <Pressable style={styles.icon} onPress={handleLike}>
+                    <LottieView ref={heartRef} style={{ flex: 1, borderColor: 'black' }} loop={false} source={require('../../assets/lottie/heart.json')} />
+                </Pressable>
 
-                <View style={styles.buttonSection}>
-                    <Pressable style={styles.icon} onPress={handleLike}>
-                        <LottieView ref={heartRef} style={{ flex: 1, borderColor: 'black' }} loop={false} source={require('../../assets/lottie/heart.json')} />
-                    </Pressable>
-
-                    <CustomButton
-                        title={'Book Now'}
-                        color={'#102C57'}
-                        textColor={'#FEFAF6'}
-                        onPress={() => {
-                            console.log("pressed")
-                        }}
-                    />
-                </View>
+                <CustomButton
+                    title={'Book Now'}
+                    color={'#102C57'}
+                    textColor={'#FEFAF6'}
+                    onPress={() => {
+                        console.log("pressed")
+                    }}
+                />
             </View>
 
         </View>
+        // </ScrollView>
     );
 }
 
@@ -109,6 +125,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 30,
+        // backgroundColor: 'black'
     },
     backButton: {
         position: 'absolute',
@@ -150,7 +167,8 @@ const styles = StyleSheet.create({
     bottom: {
         flex: 1.4,
         padding: 20,
-        justifyContent: 'space-between'
+        // justifyContent: 'space-between',
+        backgroundColor: '#F5EDF6'
     },
     descriptionText: {
         fontSize: 18,
@@ -159,16 +177,25 @@ const styles = StyleSheet.create({
         fontFamily: "PoppinsRegular",
     },
     buttonSection: {
-        // backgroundColor: 'red',
+        // backgroundColor: 'grey',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginVertical: 10,
+        paddingHorizontal: 25,
     },
     icon: {
         borderRadius: 50,
+        // shadowRadius: 50,
         height: 55,
         aspectRatio: 1,
-        borderColor: '#314E7A',
-        borderWidth: 2,
+        borderColor: 'rgba(255, 255, 255 , 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)', // Transparent white background for glossy effect
+        shadowColor: 'grey',
+        // shadowOpacity: 1,
+        shadowRadius: 50,
+        elevation: 0, // For Android shadow
+        borderWidth: 1, // Adding border for glossy effect
+        overflow: 'hidden', // Ensure content respects the border radius
     }
 
 

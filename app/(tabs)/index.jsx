@@ -32,7 +32,6 @@ export default function Index() {
             console.log("api data listing")
             await dummy()
             console.log("api data recieved")
-            console.log(listing)
         };
         fetchData();
     }, [selectedCategory])
