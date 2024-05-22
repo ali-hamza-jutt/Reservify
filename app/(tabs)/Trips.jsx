@@ -5,6 +5,7 @@ import FlightSearch from '../../components/FlightSearch';
 import HotelSearch from '../../components/HotelSearch';
 import SearchFlight from '../../components/SearchFlight';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import InputField1 from '../../components/InputField'
 
 
 export default function Trips() {
@@ -17,8 +18,8 @@ export default function Trips() {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
     >
       <SafeAreaView style={styles.safeArea}>
-        {/* <SearchFlight/> */}
-        <FlightSearch />
+        <SearchFlight/>
+        {/* <InputField1/> */}
 
         {/* <HotelSearch/> */}
       </SafeAreaView>

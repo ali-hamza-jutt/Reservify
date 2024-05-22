@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Image, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import cityToIataMapping from '../data/cityToIataMapping'; // Adjust the path as necessary
+
 
 const { width } = Dimensions.get('window');
 

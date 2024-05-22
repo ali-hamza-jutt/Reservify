@@ -1,63 +1,50 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import searchFlights from '../apis/searchFlight';
+
+// Define the getRandomPrice function before using it
+const getRandomPrice = () => {
+  return Math.floor(Math.random() * (2000 - 1200 + 1) + 1200);
+};
 
 const FlightResultScreen = () => {
   const route = useRoute();
-  const { formData } = route.params;
+  const { flightData } = route.params;
 
-  const [flights, setFlights] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const flights = flightData.data.flights.map(flight => ({
+    id: flight.id,
+    airline: flight.bounds[0].segments[0].marketingCarrier.name,
+    flightNumber: flight.bounds[0].segments[0].flightNumber,
+    duration: flight.bounds[0].segments[0].duration,
+    cabinClassName: flight.bounds[0].segments[0].cabinClassName,
+    arrivedAt: flight.bounds[0].segments[0].arrivedAt,
+    numberOfStops: flight.bounds[0].segments.length - 1,
+    imageUrl: `https://www.gstatic.com/flights/airline_logos/70px/${flight.bounds[0].segments[0].marketingCarrier.code}.png`,
+    price: getRandomPrice(), // Call getRandomPrice function
+  }));
 
-  const getRandomPrice = () => {
-    return Math.floor(Math.random() * (2000 - 1200 + 1) + 1200);
-  };
-
-  const fetchFlights = async () => {
-    try {
-      const response = await searchFlights(formData);
-      console.log('FlightData', response);
-
-      const flightList = response.data.flights.map(flight => ({
-        id: flight.id,
-        airline: flight.bounds[0].segments[0].marketingCarrier.name,
-        flightNumber: flight.bounds[0].segments[0].flightNumber,
-        duration: flight.bounds[0].segments[0].duration,
-        cabinClassName: flight.bounds[0].segments[0].cabinClassName,
-        arrivedAt: flight.bounds[0].segments[0].arrivedAt,
-        numberOfStops: flight.bounds[0].segments.length - 1,
-        imageUrl: `https://www.gstatic.com/flights/airline_logos/70px/${flight.bounds[0].segments[0].marketingCarrier.code}.png`,
-        price: getRandomPrice(),
-      }));
-
-      setFlights(flightList);
-    } catch (error) {
-      console.error(error);
-      Alert.alert('Error', 'Failed to fetch flight data');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFlights();
-  }, []);
-
+  // Function to convert milliseconds to hours and minutes format
   const formatDuration = (milliseconds) => {
     const hours = Math.floor(milliseconds / (1000 * 60 * 60));
     const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours} hr ${minutes} min`;
+    return `${hours} hr ${minutes} mnts`;
   };
 
   const renderItem = ({ item }) => {
-    const arrivedTime = item.arrivedAt.split('T')[1].substring(0, 5);
+    // Parse the 'arrivedAt' time
+    const arrivedTime = item.arrivedAt.split('T')[1].substring(0, 5); // Extract '18:00'
+
+    // Parse the duration into hours and minutes
     const durationHours = Math.floor(item.duration / (1000 * 60 * 60));
     const durationMinutes = Math.floor((item.duration % (1000 * 60 * 60)) / (1000 * 60));
+
+    // Calculate the departure time by adding duration to arrived time
     const [arrivedHours, arrivedMinutes] = arrivedTime.split(':').map(Number);
     const departureHours = (arrivedHours + durationHours) % 24;
     const departureMinutes = (arrivedMinutes + durationMinutes) % 60;
+
+    // Format departure time
     const departureTime = `${departureHours < 10 ? '0' : ''}${departureHours}:${departureMinutes < 10 ? '0' : ''}${departureMinutes}`;
 
     return (
@@ -78,21 +65,20 @@ const FlightResultScreen = () => {
     );
   };
 
+  // const handleBooking = (flight) => {
+  //   // Handle booking logic here
+  //   console.log('Booking flight:', flight);
+  // };
+
   return (
     <SafeAreaView style={styles.container}>
-      {loading ? (
-        <Text>Loading...</Text>
-      ) : (
-        <>
-          <Text style={styles.heading}>Available Flights</Text>
-          <FlatList
-            data={flights}
-            renderItem={renderItem}
-            keyExtractor={item => item.id}
-            style={styles.flatList}
-          />
-        </>
-      )}
+      <Text style={styles.heading}>Available Flights</Text>
+      <FlatList
+        data={flights}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        style={styles.flatList}
+      />
     </SafeAreaView>
   );
 };
@@ -125,8 +111,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   logo: {
-    width: '10%',
-    aspectRatio: 1,
+    width: '10%', // Take 10% of the width
+    aspectRatio: 1, // Maintain aspect ratio
     marginRight: 15,
   },
   airlineName: {
@@ -145,20 +131,20 @@ const styles = StyleSheet.create({
   durationText: {
     fontSize: 12,
     color: '#666',
-    marginTop: 5,
+    marginTop:5,
     marginBottom: 5,
   },
   intervalText: {
     fontSize: 14,
     color: '#666',
-    marginTop: 5,
+    marginTop:5,
     marginBottom: 5,
   },
-  priceText: {
+  priceText:{
     fontWeight: 'bold',
     fontSize: 14,
     marginBottom: 5,
-  },
+  }
 });
 
 export default FlightResultScreen;

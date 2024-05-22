@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import searchFlights from '../apis/searchFlight';
 
 const FlightSearch = () => {
   const navigation = useNavigation();
@@ -17,25 +16,19 @@ const FlightSearch = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
+    console.log('Hailo');
     const { fromId, toId, departureDate, adults } = formData;
-    console.log(formData);
     if (!fromId || !toId || !departureDate || !adults) {
       Alert.alert('Error', 'Please fill in all required fields');
       return;
     }
-
-    try {
-      const flightData = await searchFlights(formData);
-      console.log('Flight data:', flightData);
-      navigation.navigate('FlightResultScreen', { flightData });
-    } catch (error) {
-      Alert.alert('Error', 'Failed to fetch flight data');
-    }
+    console.log('Form:', formData);
+    navigation.navigate('FlightResultScreen', { formData });
   };
 
   return (
-    <>
+    <View style={styles.container}>
       <Text style={styles.label}>From:</Text>
       <TextInput
         style={styles.input}
@@ -70,11 +63,16 @@ const FlightSearch = () => {
       />
 
       <Button title="Search Flights" onPress={handleSubmit} />
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#fff',
+  },
   label: {
     fontSize: 16,
     marginBottom: 8,
