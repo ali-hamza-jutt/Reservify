@@ -1,6 +1,6 @@
-import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity, Pressable } from 'react-native';
+import { FlatList, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { Link,useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import useHotelHook from '../hooks/useHotelHook';
@@ -9,7 +9,6 @@ export default function ExploreListView({ dataList, category }) {
   const [loading, setLoading] = useState(true);
   const [updatedDataList, setUpdatedDataList] = useState([]);
   const listRef = useRef(null);
-  const heartRefs = useRef([]);
   const router = useRouter();
   const { fetchImages, images } = useHotelHook();
 
@@ -24,8 +23,10 @@ export default function ExploreListView({ dataList, category }) {
   }, [category]);
 
   useEffect(() => {
-    const updateDataListWithImages = () => {
-      const newDataList = dataList.map((item, index) => ({
+    
+    const updateDataListWithImages = async() => {
+      setLoading(true);
+      const newDataList = await dataList.map((item, index) => ({
         hotel_id: item.hotel_id,
         hotel_name: item.hotel_name,
         review_score: item.review_score,
@@ -34,19 +35,16 @@ export default function ExploreListView({ dataList, category }) {
         image_url: images[index] ? images[index].image_url : []
       }));
       setUpdatedDataList(newDataList);
+      // setLoading(false);
     };
 
-    if (!loading) {
+    if (!loading && images.length > 0) {
       updateDataListWithImages();
+      setLoading(false);
     }
-  }, [dataList, loading]);
-
-
-  console.log("data from hotels");
-  console.log(updatedDataList);
+  }, [dataList, loading, images]);
 
   const listItem = ({ item, index }) => (
-    // <Link href={`/listing/${index}`} asChild>
     <TouchableOpacity onPress={() => router.push({
       pathname: `/listing/${index}`,
       params: { hotelData: JSON.stringify(item) }
@@ -55,33 +53,28 @@ export default function ExploreListView({ dataList, category }) {
         <Image
           style={styles.image}
           source={{
-            uri: item.image_url && item.image_url[0] ? item.image_url[0] : 'default_image_url', // Default URL
+            uri: item.image_url && item.image_url.length > 0 ? item.image_url[0] : 'default_image_url', // Default URL
           }}
         />
       </Animated.View>
-      {/* {console.log(item.name)}
-      {console.log(item.rating)}
-      {console.log(item.country)}
-      {console.log(item.address)} */}
       <Text>{item.hotel_name || 'Unknown Hotel'}</Text>
-      <Text>{item.country_trans || 'No Rating'}</Text>
-      <Text>{item.address || 'Unknown Country'}</Text>
-      <Text>{item.review_score || 'Unknown Address'}</Text>
+      <Text>{item.country_trans || 'Unknown Country'}</Text>
+      <Text>{item.address || 'Unknown Address'}</Text>
+      <Text>{item.review_score || 'No Rating'}</Text>
     </TouchableOpacity>
-    // </Link>
   );
 
   return (
     <View style={styles.container}>
-    {loading ? (
-        <LottieView style={{ flex: 1 }} source={require('../assets/lottie/loading.json')} autoPlay loop />
+      {loading ? (
+        <LottieView style={styles.lottieView} source={require('../assets/lottie/loading.json')} autoPlay loop />
       ) : (
-      <FlatList
-        data={loading ? [] : updatedDataList}
-        ref={listRef}
-        renderItem={listItem}
-        keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()} // Ensure unique key for each item
-      />
+        <FlatList
+          data={updatedDataList}
+          ref={listRef}
+          renderItem={listItem}
+          keyExtractor={(item, index) => item.hotel_id ? item.hotel_id.toString() : index.toString()} // Ensure unique key for each item
+        />
       )}
     </View>
   );
@@ -114,11 +107,9 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5, // For Android shadow
     borderWidth: 1, // Adding border for glossy effect
-    // borderColor: 'rgba(255, 255, 255, 0.5)', // White border with transparency
     borderColor: 'rgba(255, 255, 255 , 0.5)', // White border with transparency
     overflow: 'hidden', // Ensure content respects the border radius
   },
-
   lottieView: {
     width: '100%',
     height: '100%',

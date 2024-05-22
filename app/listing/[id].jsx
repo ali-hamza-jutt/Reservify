@@ -30,11 +30,16 @@ export default function Page() {
           const isInWishlist = await isHotelInWishlist(listingData.hotel_id, "userId1");
           setFav(isInWishlist);
           if (isInWishlist) {
+            console.log("add")
             heartRef?.current?.play(144, 144); // Ensure the heart is filled if the hotel is in the wishlist
+          }
+          else{
+            console.log("rem")
+            heartRef?.current?.reset();
           }
         };
         checkWishlistStatus();
-      }, []);
+      }, [heartRef]);
 
     const handleLike = () => {
         if (fav) {

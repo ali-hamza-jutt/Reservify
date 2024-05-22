@@ -99,29 +99,27 @@ const FlightResultScreen = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       {loading ? (
         <LottieView style={{ flex: 1 }} source={require('../assets/lottie/loading.json')} autoPlay loop />
       ) : (
-        <>
-          <Text style={styles.heading}>Available Flights</Text>
+        <View style={styles.flatListContainer}>
+          {/* <Text style={styles.heading}>Available Flights</Text> */}
           <FlatList
             data={flights}
             renderItem={renderItem}
             keyExtractor={item => item.id}
-            style={styles.flatList}
           />
-        </>
+        </View>
       )}
-    </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
-    backgroundColor: "#fff",
+    // backgroundColor: "grey",
   },
   heading: {
     fontSize: 20,
@@ -129,8 +127,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 10,
   },
-  flatList: {
-    backgroundColor: '#fff',
+  flatListContainer: {
+    // backgroundColor: 'blue',
+    flex: 1,
+    padding: 13,
   },
   cardContainer: {
     flexDirection: 'column',
