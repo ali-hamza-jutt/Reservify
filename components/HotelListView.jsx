@@ -73,12 +73,16 @@ export default function ExploreListView({ dataList, category }) {
 
   return (
     <View style={styles.container}>
+    {loading ? (
+        <LottieView style={{ flex: 1 }} source={require('../assets/lottie/loading.json')} autoPlay loop />
+      ) : (
       <FlatList
         data={loading ? [] : updatedDataList}
         ref={listRef}
         renderItem={listItem}
         keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()} // Ensure unique key for each item
       />
+      )}
     </View>
   );
 }
