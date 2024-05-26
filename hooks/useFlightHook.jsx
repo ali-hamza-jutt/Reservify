@@ -5,7 +5,7 @@ const useFlightHook = async (formData) => {
     method: 'GET',
     url: 'https://booking-com18.p.rapidapi.com/flights/search-oneway',
     headers: {
-      'X-RapidAPI-Key': '4ae0a9d261msh291a3241b5be103p114c55jsn849906fb5d0a',
+      'X-RapidAPI-Key': '8857f31166mshdcdb67ac9d39494p1f60a6jsne9e4e097069b',
       'X-RapidAPI-Host': 'booking-com18.p.rapidapi.com'
     },
     params: {

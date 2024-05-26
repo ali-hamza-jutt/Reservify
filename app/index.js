@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#102C57',
+        
 
     },
     animation: {
@@ -65,6 +66,7 @@ const styles = StyleSheet.create({
         aspectRatio: 1,
         marginTop: 70,
         // backgroundColor: 'red',
+        
     },
     bottom: {
         flex: 1,

@@ -57,7 +57,7 @@ export default function Index() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     header: {
         flex: 1.5,
@@ -67,6 +67,7 @@ const styles = StyleSheet.create({
     listing: {
         flex: 6,
         backgroundColor: '#FAFCFD',
+        
     },
     card: {
         backgroundColor: '#fff',

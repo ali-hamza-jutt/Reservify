@@ -24,7 +24,7 @@ const FlightResultScreen = () => {
   const formData={
     fromId:'LHE',
     toId:'LHR',
-    departureDate:'2024-05-23',
+    departureDate:'2024-05-30',
     adults:'1'
   }
 

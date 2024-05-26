@@ -135,20 +135,22 @@ export default function ExploreHeader({ onCategoryChanged }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
-    paddingTop: 25,
+    paddingTop: 30,
     gap: 20,
+    height:200,
     // backgroundColor: 'black',
   },
   textHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 170,
+    padding:20,
   },
   actionRow:{
     paddingHorizontal: 20,
+    height:40
   },
   searchBtn: {
     flexDirection: 'row',
@@ -175,6 +177,8 @@ const styles = StyleSheet.create({
     gap: 20,
     // margin: 7,
     // backgroundColor: 'red'
+    height:55,
+
   },
   catoryText: {
     fontSize: 14,
@@ -219,6 +223,7 @@ const styles = StyleSheet.create({
     shadowColor: '#FFB900',
     shadowOpacity: 0.12,
     shadowRadius: 8,
+    
     shadowOffset: {
       width: 2,
       height: 2,
