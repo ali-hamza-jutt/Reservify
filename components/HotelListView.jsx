@@ -4,6 +4,9 @@ import { useRouter } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
 import useHotelHook from '../hooks/useHotelHook';
+import { AntDesign } from '@expo/vector-icons';
+import * as Font from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 export default function ExploreListView({ dataList, category }) {
   const [loading, setLoading] = useState(true);
@@ -11,6 +14,20 @@ export default function ExploreListView({ dataList, category }) {
   const listRef = useRef(null);
   const router = useRouter();
   const { fetchImages, images } = useHotelHook();
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  const loadFonts = async () => {
+    await Font.loadAsync({
+      'PoppinsRegular': require('../assets/fonts/Poppins-Regular.ttf'),
+      'PoppinsSemiBold': require('../assets/fonts/Poppins-SemiBold.ttf'),
+    });
+    setFontsLoaded(true);
+    await SplashScreen.hideAsync();
+  };
+
+  useEffect(() => {
+    loadFonts();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,8 +40,8 @@ export default function ExploreListView({ dataList, category }) {
   }, [category]);
 
   useEffect(() => {
-    
-    const updateDataListWithImages = async() => {
+
+    const updateDataListWithImages = async () => {
       setLoading(true);
       const newDataList = await dataList.map((item, index) => ({
         hotel_id: item.hotel_id,
@@ -50,17 +67,29 @@ export default function ExploreListView({ dataList, category }) {
       params: { hotelData: JSON.stringify(item) }
     })}>
       <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: item.image_url && item.image_url.length > 0 ? item.image_url[0] : 'default_image_url', // Default URL
-          }}
-        />
+        <View style={styles.cardContainer}>
+          <Image
+            style={styles.image}
+            source={{
+              uri: item.image_url && item.image_url.length > 0 ? item.image_url[0] : 'default_image_url', // Default URL
+            }}
+          />
+
+          <View style={styles.textDescription}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ fontFamily: 'PoppinsSemiBold', fontSize: 18 }}>{item.hotel_name || 'Unknown Hotel'}</Text>
+              <View style={{ flexDirection: 'row', gap: 7, justifyContent: 'center' }}>
+                <Text style={{ fontFamily: 'PoppinsSemiBold', fontSize: 18 }}>{item.review_score || ''}</Text>
+                <AntDesign name="star" size={24} color="#EDC616" />
+              </View>
+            </View>
+
+            <Text style={{ fontFamily: 'PoppinsRegular', }}>{item.country_trans || 'Unknown Country'}</Text>
+            <Text style={{ fontFamily: 'PoppinsRegular', }}>{item.address || 'Unknown Address'}</Text>
+          </View>
+        </View>
       </Animated.View>
-      <Text>{item.hotel_name || 'Unknown Hotel'}</Text>
-      <Text>{item.country_trans || 'Unknown Country'}</Text>
-      <Text>{item.address || 'Unknown Address'}</Text>
-      <Text>{item.review_score || 'No Rating'}</Text>
+
     </TouchableOpacity>
   );
 
@@ -86,12 +115,12 @@ const styles = StyleSheet.create({
   },
   listing: {
     padding: 16,
-    position: 'relative', // Ensure relative positioning for absolute children
+    // backgroundColor: 'red',
   },
   image: {
     width: '100%',
     height: 250,
-    borderRadius: 10,
+    borderRadius: 15,
   },
   icon: {
     width: 50, // Set appropriate width for the icon container
@@ -105,7 +134,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 3,
-    elevation: 5, // For Android shadow
+    elevation: 10, // For Android shadow
     borderWidth: 1, // Adding border for glossy effect
     borderColor: 'rgba(255, 255, 255 , 0.5)', // White border with transparency
     overflow: 'hidden', // Ensure content respects the border radius
@@ -114,4 +143,20 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
+  cardContainer: {
+    backgroundColor: '#DEE5F0',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5, // For Android shadow
+    overflow: 'hidden',
+
+  },
+  textDescription: {
+    padding: 10,
+    // flexDirection: 'row',
+    justifyContent: 'space-between'
+  }
 });

@@ -1,39 +1,46 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView, ScrollView } from 'react-native';
 import React, { useState } from 'react';
+import { View, Text, StyleSheet, Image, TouchableOpacity, KeyboardAvoidingView, Alert, SafeAreaView, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomTextField from '../components/CustomTextField';
 import CustomButton from '../components/CustomButton';
+import useAuthHook from '../hooks/useAuthHook';
 
 export default function Signup() {
     const navigation = useNavigation();
-
+    const { signUp } = useAuthHook(); // Correctly destructure the signUp function
     const [submit, setSubmit] = useState(false);
     const [userData, setUserData] = useState({
         Username: "",
         phone: "",
         email: "",
         password: "",
-        cnfPassword: ""
+        cnfPassword: "",
+        wishlist: {},
+        bookings: []
     });
 
     function handleChange(name, text) {
-        if (name === "cnfPassword" && text !== userData.password) {
-            setSubmit(false);
-        } else {
-            setSubmit(true);
-        }
         setUserData({
             ...userData,
             [name]: text
         });
+
+        if (name === "cnfPassword" && text !== userData.password) {
+            setSubmit(false);
+        } else if (name === "password" && userData.cnfPassword !== text) {
+            setSubmit(false);
+        } else {
+            setSubmit(true);
+        }
     }
 
-    function handleSubmit() {
+    const handleSubmit = async () => {
         if (userData.Username.trim() === "" || userData.phone.trim() === "" || userData.email.trim() === "" || userData.password.trim() === "" || userData.cnfPassword.trim() === "") {
             Alert.alert("Invalid Form", "Please fill in all fields");
             return;
-        } else if (submit) {//checks if pass == cnfpass
-            console.log(userData);
+        } else if (submit) { // Check if passwords match
+            const { cnfPassword, ...userDataObj } = userData;
+            await signUp(userDataObj);
             navigation.navigate('Login');
         } else {
             Alert.alert("Error", "Passwords do not match.");
@@ -67,8 +74,8 @@ export default function Signup() {
                                 placeholder={'Phone number'}
                                 name={'phone'}
                                 value={userData.phone}
-                                onChangeText={(text) => handleChange("cnfPassword", text)}
-                                keyboardType="default"
+                                onChangeText={(text) => handleChange("phone", text)}
+                                keyboardType="numeric"
                                 icon={"call"}
                             />
                             <CustomTextField
@@ -85,6 +92,7 @@ export default function Signup() {
                                 value={userData.password}
                                 onChangeText={(text) => handleChange("password", text)}
                                 keyboardType="default"
+                                secureTextEntry={true} // Secure text entry for password fields
                                 icon={"lock-closed"}
                             />
                             <CustomTextField
@@ -93,6 +101,7 @@ export default function Signup() {
                                 value={userData.cnfPassword}
                                 onChangeText={(text) => handleChange("cnfPassword", text)}
                                 keyboardType="default"
+                                secureTextEntry={true} // Secure text entry for password fields
                                 icon={"lock-closed"}
                             />
                         </View>
@@ -143,7 +152,13 @@ const styles = StyleSheet.create({
         marginTop: 18,
     },
     bottomSection: {
-        marginTop: 18,
+        marginHorizontal: 40,
+        marginBottom: 20,
         alignItems: 'center',
+        paddingVertical: 10,
+    },
+    scrollViewContent: {
+        flexGrow: 1,
+        justifyContent: 'center',
     }
 });

@@ -38,6 +38,7 @@ export default function Login() {
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
+          Alert.alert("Invalid credentials", "Try again");
           console.log(error);
         });
         

@@ -3,7 +3,7 @@ import React from 'react'
 import { Stack } from 'expo-router'
 import CustomTextField from '../../components/CustomTextField'
 
-export default function hotelSearch() {
+export default function HotelsSearch() {
     return (
         <View style={styles.container}>
             <Stack.Screen options={{

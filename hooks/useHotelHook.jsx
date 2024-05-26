@@ -5,6 +5,7 @@ import { getDatabase, ref, onValue, set, remove, get, child, update } from "fire
 import { useState } from 'react';
 const useHotelHook = () => {
     const [images, setImg] = useState([])
+    const [favorite, setFavorite] = useState([])
     const [listing, setListing] = useState([])
     const search = async (formData) => {
         const options = {
@@ -65,7 +66,7 @@ const useHotelHook = () => {
                 children_ages: '5,0'
             },
             headers: {
-                'X-RapidAPI-Key': '8857f31166mshdcdb67ac9d39494p1f60a6jsne9e4e097069b',
+                'X-RapidAPI-Key': 'e1ad799182mshb4f50555b8fe85ap1bf88fjsn0a6335d2a042',
                 'X-RapidAPI-Host': 'booking-com.p.rapidapi.com'
             }
         };
@@ -137,6 +138,18 @@ const useHotelHook = () => {
         }
     };
 
+    const getWishLists = async (userId) => {
+
+        const db = getDatabase(app);
+        const dbRef = ref(db, `users/${userId}/wishlist`);
+        console.log("data receiving");
+        onValue(dbRef, (snapshot) => {
+          let data = snapshot.val();
+          console.log(data);
+          setFavorite(data); // This will update the state and cause a re-render
+        });
+      };
+
     return {
         search,
         dummy,
@@ -144,8 +157,10 @@ const useHotelHook = () => {
         addWishList,
         removeWishList,
         isHotelInWishlist,
+        getWishLists,
         images,
-        listing
+        listing,
+        favorite
     };
 };
 

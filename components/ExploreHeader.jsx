@@ -98,8 +98,9 @@ export default function ExploreHeader({ onCategoryChanged }) {
       </View> */}
 
       <View style={styles.actionRow}>
-        <Link href={'/(modals)/hotelSearch'} asChild>
-          <TouchableOpacity style={styles.searchBtn}>
+        <Link href={`/(modals)/${categories[activeIndex].name}Search`} asChild>
+          <TouchableOpacity style={styles.searchBtn}
+          onPress={()=>console.log(`/(modals)/${categories[activeIndex].name}Search`)}>
             <Ionicons name='search' size={24} color={'black'}/>
             <View>
               <Text style={{fontFamily: 'PoppinsSemiBold', fontSize: 15,}}>Where to?</Text>
@@ -108,7 +109,6 @@ export default function ExploreHeader({ onCategoryChanged }) {
           </TouchableOpacity>
         </Link>
       </View>
-
 
       <ScrollView horizontal ref={scrollRef} showsHorizontalScrollIndicator={false} contentContainerStyle={styles.scrollContainer}>
         {categories.map((item, index) => (

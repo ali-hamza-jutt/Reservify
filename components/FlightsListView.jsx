@@ -133,16 +133,17 @@ const styles = StyleSheet.create({
     padding: 13,
   },
   cardContainer: {
-    flexDirection: 'column',
-    backgroundColor: '#CAF4FF',
+    backgroundColor: '#DEE5F0',
     borderRadius: 10,
     marginBottom: 10,
     padding: 15,
     alignItems: 'center',
   },
   itemContainer: {
+    // backgroundColor: 'red',
     flexDirection: 'row',
     flex: 1,
+    alignItems: 'center',
   },
   logo: {
     width: '10%',
