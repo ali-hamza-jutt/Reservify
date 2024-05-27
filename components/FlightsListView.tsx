@@ -1,37 +1,35 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// export default function FlightsListView() {
-//   return (
-//     <View>
-//       <Text>FlightsListView</Text>
-//     </View>
-//   )
-// }
-
-// const styles = StyleSheet.create({})
-
-
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
-import { useRoute } from '@react-navigation/native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import useFlightHook from '../hooks/useFlightHook';
 import LottieView from 'lottie-react-native';
 
-const FlightResultScreen = () => {
-  const route = useRoute();
-  const formData={
-    fromId:'LHE',
-    toId:'LHR',
-    departureDate:'2024-05-30',
-    adults:'1'
-  }
+type Flight = {
+  id: string;
+  airline: string;
+  flightNumber: string;
+  duration: number;
+  cabinClassName: string;
+  arrivedAt: string;
+  numberOfStops: number;
+  imageUrl: string;
+  price: number;
+};
 
-  const [flights, setFlights] = useState([]);
+const FlightResultScreen: React.FC = () => {
+  const route = useRoute<RouteProp<Record<string, object | undefined>, string>>();
+  const formData = {
+    fromId: 'LHE',
+    toId: 'LHR',
+    departureDate: '2024-05-30',
+    adults: '1',
+  };
+
+  const [flights, setFlights] = useState<Flight[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const getRandomPrice = () => {
+  const getRandomPrice = (): number => {
     return Math.floor(Math.random() * (2000 - 1200 + 1) + 1200);
   };
 
@@ -40,7 +38,7 @@ const FlightResultScreen = () => {
       const response = await useFlightHook(formData);
       console.log('FlightData', response);
 
-      const flightList = response.data.flights.map(flight => ({
+      const flightList = response.data.flights.map((flight: any) => ({
         id: flight.id,
         airline: flight.bounds[0].segments[0].marketingCarrier.name,
         flightNumber: flight.bounds[0].segments[0].flightNumber,
@@ -65,13 +63,13 @@ const FlightResultScreen = () => {
     fetchFlights();
   }, []);
 
-  const formatDuration = (milliseconds) => {
+  const formatDuration = (milliseconds: number): string => {
     const hours = Math.floor(milliseconds / (1000 * 60 * 60));
     const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
     return `${hours} hr ${minutes} min`;
   };
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({ item }: { item: Flight }) => {
     const arrivedTime = item.arrivedAt.split('T')[1].substring(0, 5);
     const durationHours = Math.floor(item.duration / (1000 * 60 * 60));
     const durationMinutes = Math.floor((item.duration % (1000 * 60 * 60)) / (1000 * 60));
@@ -104,7 +102,6 @@ const FlightResultScreen = () => {
         <LottieView style={{ flex: 1 }} source={require('../assets/lottie/loading.json')} autoPlay loop />
       ) : (
         <View style={styles.flatListContainer}>
-          {/* <Text style={styles.heading}>Available Flights</Text> */}
           <FlatList
             data={flights}
             renderItem={renderItem}
